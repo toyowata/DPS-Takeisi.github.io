@@ -1,0 +1,439 @@
+<!--
+ Mbed Cloud JavaScript SDK
+ Copyright Arm Limited 2017
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pelion & GR-LYCHEE Camera Monitoring</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="./config.js"></script>
+    <script src="./bundles/connect.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+</head>
+<body>
+	<div id="dps_logo"></div>
+    <div style="float: right;">
+    	<button id="en">English</button><button id="jp">日本語</button>
+    </div>
+    <div id="apikey-holder" style="clear: both;">
+        <span lang="en">API Key</span><span lang="ja">APIキー</span>:
+        <input id="api_key" type="text" value="ak_1MDE2ZTYzNmVjYmE0NTI3M2FmNmYxMDdjMDAwMDAwMDA016e6377e4645273af6f107c00000000FGDEz4K5qWW9DlkSBQRSF6Tleqdqrtpi" />
+        <button type="button" id="button-get-device-list" onClick="getDeviceList()"><span lang="en">Connect</span><span lang="ja">接続</span></button>
+    </div>
+
+    <div id="device-list-message-holder" style="clear: both; margin: 8pt 0pt 8pt 0pt;">
+        <span lang="en">No connected device</span><span lang="ja">未接続</span>
+    </div>
+
+    <div id="device-list" >
+        <!-- Device list here. -->
+    </div>
+
+<!--
+    <div>
+        <button type="button" id="button-subscribe-camera" onClick="subscribeTemperature()" disabled><span lang="en">Select Device</span><span lang="ja">デバイスを選択</span></button>
+    </div>
+-->
+
+    <hr />
+
+	<div class="infoArea">
+		<div class="infoBox box_temperature green">
+			<div class="over temperature_over">
+				<span class="amount" id="temperature">
+		            -
+			    </span>°C
+		    </div>
+	    </div>
+	    <div class="infoBox box_humidity blue">
+	    	<div class="over humidity_over">
+			    <span class="amount" id="humidity">
+			            -
+			    </span>%
+		    </div>
+	    </div>
+	    <div class="infoBox box_pressure blue">
+	    	<div class="over pressure_over">
+			    <span class="amount" id="pressure">
+			            -
+			    </span>hPa
+		    </div>
+	    </div>
+	    <div class="infoBox box_illuminance green">
+	    	<div class="over illuminance_over">
+			    <span class="amount" id="illuminance">
+			            -
+			    </span>lux
+		    </div>
+	    </div>
+	    <div class="infoBox box_uv green">
+	    	<div class="over uv_over">
+			    <span class="amount" id="uv">
+			            -
+			    </span>　
+		    </div>
+	    </div>
+	    <div class="infoBox blue">
+	    	<div class="over">
+	    	</div>
+	    </div>
+	</div>
+
+    <hr />
+
+    <div>
+    	<div>
+	        <p lang="en" style="font-size: small; color: #888888;">
+	                To take a picture, click the CAPTURE button.<br />
+	                You can also take a picture by pushing UB0 button on GR-LYCHEE.
+	        </p>
+	        <p lang="ja" class="capture_description_jp" style="font-size: small; color: #888888;">
+	        		映像をキャプチャする際は「キャプチャ」ボタンをクリックしてください。<br />
+	        		GR-LYCHEEボードのUB0ボタンでもキャプチャできます。
+	        </p>
+        </div>
+        <p style="margin: 8pt 0pt 8pt 0pt;">
+            <input type="checkbox" id="checkbox-auto-capture" onClick="handleAutoCapture()"> <span lang="en">auto capture</span><span lang="ja">自動キャプチャ</span>
+                <select id="trigger-period" name="trigger period" lang="en">
+                    <option value="0">continuously</option>
+                    <option value="5" selected>wait 5 sec</option>
+                    <option value="10">wait 10 sec</option>
+                    <option value="20">wait 20 sec</option>
+                    <option value="30">wait 30 sec</option>
+                    <option value="60">wait 1 min</option>
+                    <option value="300">wait 5 min</option>
+                    <option value="600">wait 10 min</option>
+                    <option value="3600">wait 1 hour</option>
+                </select>
+
+                <select id="trigger-period" name="trigger period" lang="ja">
+                    <option value="0">常時</option>
+                    <option value="5" selected>5秒間隔</option>
+                    <option value="10">10秒間隔</option>
+                    <option value="20">20秒間隔</option>
+                    <option value="30">30秒間隔</option>
+                    <option value="60">1分間隔</option>
+                    <option value="300">5分間隔</option>
+                    <option value="600">10分間隔</option>
+                    <option value="3600">1時間間隔</option>
+                </select>
+        </p>
+        <p>
+            <button type="button" id="button-trigger-camera" onClick="triggerCamera()" disabled><span lang="en">Capture</span><span lang="ja">キャプチャ</span></button>
+        </p>
+        <div id="device-message-holder" style="margin: 8pt 0pt 8pt 0pt;">
+            <!-- message here. -->
+        </div>
+
+
+    </div>
+
+    <div id="image-holder" style="margin: 8pt 0px 0px 8pt;">
+        <!-- Received Photo Here. -->
+    </div>
+
+    <!-- Javascript -->
+    <script>
+        const cameraCaptureRes = "/3200/0/4014";    // Camera capture
+        const cameraShutterRes = "/3201/0/5853";    // Camera shutter, which triggers taking a photo
+
+
+        let connect;          // ConnectAPI object
+
+        let autoCaptureTimerId;       // Timer ID for auto capture
+        let countDownTimerId;
+
+        /*
+         * Get the device list associated with the provided API key.
+         */
+        function getDeviceList(){
+            let key = document.getElementById("api_key").value;
+            if(key == "") {
+                window.alert("Set your API key.");
+                return;
+            } else {
+                window.config.apiKey = key;
+                connect = new MbedCloudSDK.ConnectApi.default(window.config);
+                console.log("Connect API object created.");
+            }
+            listDevices();
+        }
+
+        /*
+         * Create a list of devices associated with the account.
+         */
+        function listDevices() {
+            document.getElementById("device-list-message-holder").innerText = "Listing connected devices...";
+            connect.listConnectedDevices()
+            .then(devices => {
+                console.log(devices.data.length + " connected device(s) found.");
+                document.getElementById("device-list-message-holder").innerText = devices.data.length + " connected device(s) found.";
+                document.getElementById("device-list").innerHTML = "";
+                for(let i=0; i < devices.data.length; i++) {
+                    let id = devices.data[i].id;
+                    document.getElementById("device-list").innerHTML +=
+                        '<input type="radio" name="selected-device" value="' + id + '"'
+                        + ' id="button-subscribe-camera" onClick="subscribeTemperature()"> ' + id + "<br />\n";
+                        /*+ (i == 0 ? " checked" : "" ) +'> ' + id + "<br />\n";*/
+                    console.log(id);
+                }
+                // Enable the subscribe button
+                document.getElementById("button-subscribe-camera").disabled = false;
+            })
+            .catch(error => {
+                console.log(error);
+                document.getElementById("device-list-message-holder").innerHTML = '<font color="#ff0000">' + error + "</font>";
+            });
+        }
+
+        /*
+         * Returns the device id which is selected by the radio button.
+         */
+        function getSelectedDeviceId() {
+            let ret;
+            let radios = document.getElementsByName("selected-device");
+            for(let i=0; i < radios.length; i++) {
+                if(radios[i].checked) {
+                    ret = radios[i].value;
+                }
+            }
+            return ret;
+        }
+
+        /*
+         * Returns if auto capture is currently enabled or not.
+         */
+        function isAutoCaptureMode() {
+            return document.getElementById("checkbox-auto-capture").checked;
+        }
+
+        //ここから自作
+
+        function getValue(blockId, path, digit) {
+
+                     let deviceId = getSelectedDeviceId();
+                     // Add subscription for the selected device.
+                     connect.addResourceSubscription(deviceId, path, data => {      // Called every notification
+                    	 document.getElementById(blockId).innerText = data.toFixed(digit);
+                     })
+                     .then(asyncId => { // Called subscription succeed.
+                        // console.log(asyncId);
+                         // Enable the photo capture button
+                         document.getElementById("button-trigger-camera").disabled = false;
+                         document.getElementById("device-list-message-holder").innerText = 'Selected device is enabled.';
+                     })
+                     .catch(error => {
+                         console.log(error);
+                         document.getElementById("device-list-message-holder").innerHTML = '<font color="#ff0000">' + error + "</font>";
+                     });
+
+             }
+
+         /*
+         * Subscribes the camera resource on the selected device.
+         */
+         function subscribeTemperature() {
+
+             const temperaturePath = "/3303/0/5700";
+             const humidityPath = "/3304/0/5700";
+             const pressurePath = "/3323/0/5700";
+             const illuminancePath = "/3301/0/5700";
+             const uvPath = "/3300/0/5700";
+
+             document.getElementById("device-list-message-holder").innerText = "Enabling the selected device...";
+
+
+             // Clear existing subscription if exist.
+
+             connect.deleteSubscriptions()
+             .then(getValue("temperature", temperaturePath, 1))
+             .then(getValue("humidity", humidityPath, 1))
+             .then(getValue("pressure", pressurePath, 1))
+             .then(getValue("illuminance", illuminancePath, 0))
+             .then(getValue("uv", uvPath, 2))
+
+              .catch(error => {
+                 console.log(error);
+                 document.getElementById("device-list-message-holder").innerHTML = '<font color="#ff0000">' + error + "</font>";
+             });
+
+         }
+
+        //ここまで自作
+
+        /*
+         * Subscribes the camera resource on the selected device.
+         */
+        function subscribeCamera() {
+            document.getElementById("device-list-message-holder").innerText = "Enabling the selected device...";
+            // Clear existing subscription if exist.
+
+           connect.deleteSubscriptions()
+            .then(function() {
+                let deviceId = getSelectedDeviceId();
+                console.log("Subscrive to " + deviceId);
+                // Add subscription for the selected device.
+                connect.addResourceSubscription(deviceId, cameraCaptureRes, data => {      // Called every notification
+                    document.getElementById("device-message-holder").innerText = "Obtained camera capture.";
+                    if(isAutoCaptureMode()) {
+                        // get the period in sec
+                        let period = document.getElementById("trigger-period").value;
+                        // Call triggerCamera() in the specified second.
+                        // Note that setTimeout takes timeout in milli-seconds.
+                        autoCaptureTimerId = setTimeout("triggerCamera()", period*1000);
+                        // Show auto capture message.
+                        document.getElementById("device-message-holder").innerHTML = 'Auto capture mode. Waiting <span id="remain-time">' + period + '</span> seconds ...';
+                        // Start count down.
+                        updateCount(period);
+                    } else {
+                        // Enable the CAPTURE button
+                        document.getElementById("button-trigger-camera").disabled = false;
+                    }
+                    // Show the obtained picture.
+                    showCapture(data);
+                })
+                .then(asyncId => { // Called subscription succeed.
+                    console.log(asyncId);
+                    // Enable the photo capture button
+                    document.getElementById("button-trigger-camera").disabled = false;
+                    document.getElementById("device-list-message-holder").innerText = 'Selected device is enabled.';
+                })
+                .catch(error => {
+                    console.log(error);
+                    document.getElementById("device-list-message-holder").innerHTML = '<font color="#ff0000">' + error + "</font>";
+                });
+            })
+            .catch(error => {
+                console.log(error);
+                document.getElementById("device-list-message-holder").innerHTML = '<font color="#ff0000">' + error + "</font>";
+            });
+        }
+
+        /*
+         * Trigger to take a photo.
+         */
+        function triggerCamera() {
+            // Disable the CAPTURE button.
+            document.getElementById("button-trigger-camera").disabled = true;
+            // Trigger the camera shutter
+            let deviceId = getSelectedDeviceId();
+            const payload = "Don't care.";
+            connect.setResourceValue(deviceId, cameraShutterRes, payload)
+            .then(response => {
+                document.getElementById("device-message-holder").innerText = "Camera triggered...";
+                console.log("Camera triggered...");
+            })
+            .catch(error => {
+                console.log(error);
+                document.getElementById("device-message-holder").innerHTML = '<font color="#ff0000">' + error + "</font>";
+                // Enable the CAPTURE button
+                document.getElementById("button-trigger-camera").disabled = false;
+            });
+        }
+
+        /*
+         * Called when user click the auto capture checkbox.
+         */
+        function handleAutoCapture() {
+            if(!isAutoCaptureMode()) {      // Auto capture mode is disabled.
+                console.log("Auto capture dismissed.");
+                if(autoCaptureTimerId) {    // Timer has fired.
+                    // Clear timeout
+                    clearTimeout(autoCaptureTimerId);
+                    autoCaptureTimerId = null;
+                    // Enable CAPTURE button again.
+                    document.getElementById("button-trigger-camera").disabled = false;
+                    // Show message.
+                    document.getElementById("device-message-holder").innerText = "Auto capture finished.";
+                }
+                if(countDownTimerId) {      // Count down timer has fired.
+                    // Clear timeout.
+                    clearTimeout(countDownTimerId);
+                    countDownTimerId = null;
+                }
+            }
+        }
+
+        /**
+         * Update the count value when auto capture mode.
+         */
+        function updateCount(currentCount) {
+            if(currentCount >= 0) {
+                document.getElementById("remain-time").innerText = currentCount;
+                countDownTimerId = setTimeout(updateCount, 1000, currentCount-1);
+            }
+        }
+
+        /*
+         * Display the given jpeg data. The argument must be jpeg data.
+         */
+        const showCapture = (function() {
+            const NUM_MAX_CAPTURE = 10;                     // Maximum number of photos to be kept.
+            let captures = new Array(NUM_MAX_CAPTURE);
+            return function(data) {
+                let currentTime = new Date().toLocaleString();
+                // Add a new element.
+                captures.unshift('<p style="border-style: solid; border-width: 1px">Device: ' + getSelectedDeviceId()
+                        + '<br />' + currentTime + '<br /><img src="data:image/jpeg;base64,' + window.btoa(data) + '"></p>');
+                // Remove the last element.
+                captures.pop();
+                // construct HTML
+                let img_holder = document.getElementById("image-holder");
+                img_holder.innerHTML = "";
+                for(let blob of captures) {
+                    if(blob) {
+                        // blob is not undefined.
+                        img_holder.innerHTML += blob;
+                    }
+                }
+            }
+        })();
+
+        $('#jp').on('click', function() {
+        	$('.temperature_over').addClass('temperature_over_jp');
+        	$('.humidity_over').addClass('humidity_over_jp');
+        	$('.pressure_over').addClass('pressure_over_jp');
+        	$('.illuminance_over').addClass('illuminance_over_jp');
+        	$('.uv_over').addClass('uv_over_jp');
+        	$(':lang(en)').hide();
+        	$(':lang(ja)').show();
+        });
+
+        $('#en').on('click', function() {
+        	$('.temperature_over').removeClass('temperature_over_jp');
+        	$('.humidity_over').removeClass('humidity_over_jp');
+        	$('.pressure_over').removeClass('pressure_over_jp');
+        	$('.illuminance_over').removeClass('illuminance_over_jp');
+        	$('.uv_over').removeClass('uv_over_jp');
+        	$(':lang(en)').show();
+        	$(':lang(ja)').hide();
+        });
+
+    </script>
+</body>
+</html>

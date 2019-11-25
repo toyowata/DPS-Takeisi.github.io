@@ -1,0 +1,253 @@
+/*
+* Mbed Cloud JavaScript SDK
+* Copyright Arm Limited 2017
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* Skeleton extensions */
+input[type="color"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    height: 38px;
+    padding: 6px 10px;
+    background-color: #fff;
+    border: 1px solid #D1D1D1;
+    border-radius: 4px;
+    box-shadow: none;
+    box-sizing: border-box;
+}
+input[type="color"]:focus,
+input[type="date"]:focus,
+input[type="datetime-local"]:focus,
+input[type="time"]:focus {
+    border: 1px solid #33C3F0;
+    outline: 0;
+}
+
+button,
+input[type="button"],
+input[type="submit"],
+.button {
+    color: #FFF;
+    background-color: #33C3F0;
+    border-color: #33C3F0;
+    margin: 5px;
+}
+button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+.button:hover,
+button:focus,
+input[type="button"]:focus,
+input[type="submit"]:focus,
+.button:focus {
+    color: #FFF;
+    background-color: #1EAEDB;
+    border-color: #1EAEDB;
+}
+button:disabled,
+input[type="button"]:disabled,
+input[type="submit"]:disabled {
+    background-color: #CCCCCC;
+    border-color: #CCCCCC;
+}
+
+input[type="checkbox"] {
+    display: inline;
+}
+input[type="checkbox"] + label {
+    display: inline-block;
+    margin-left: .5rem;
+}
+
+textarea {
+    resize:vertical;
+}
+
+/* Page */
+body {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+form {
+    margin: 0 auto;
+    text-align: left;
+    width: 80%;
+}
+
+h1, h2, h3 {
+    border-bottom: 1px solid #efefef;
+}
+
+table {
+    max-width: 90%;
+    margin: 10px auto;
+}
+
+.pre {
+    white-space: pre;
+}
+
+#dps_logo {
+	float: left;
+	width: 300px;
+	height: 50px;
+	background: url('img/DPS_logo.png') no-repeat;
+	background-size: contain;
+}
+
+button#en, button#jp {
+	width: 70px;
+	height: 25px;
+	line-height: 25px;
+	text-align: center;
+	padding: 0;
+}
+
+.infoArea {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	max-width: 500px;
+	margin: 0 auto;
+}
+
+.infoBox {
+	position: relative;
+	margin: 5px;
+	width: 200px;
+	height: 100px;
+	border-radius: 4px;
+	font-family: 'Open Sans';
+	text-shadow: 0px 1px 2px rgba(150, 150, 150, 0.4);
+}
+
+.infoBox::before, .over::before {
+	position: absolute;
+	z-index: 0;
+	top: 0;
+	left: 0.5rem;
+	color: rgba(0, 0, 0, 0.8);
+	font-size: 120%;
+}
+
+.box_temperature {
+	background: url('img/temp.svg') no-repeat;
+	background-size: contain;
+}
+
+.over {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	background: rgba(255,255,255,0.8);
+}
+
+.temperature_over::before {
+	content: 'Temperature';
+}
+
+.temperature_over_jp::before {
+	content: '気温';
+}
+
+.humidity_over::before {
+	content: 'Humidity';
+}
+
+.humidity_over_jp::before {
+	content: '湿度';
+}
+
+.box_humidity {
+	background: url('img/humidity.svg') no-repeat;
+	background-size: contain;
+}
+
+.pressure_over::before {
+	content: 'Air Pressure';
+}
+
+.pressure_over_jp::before {
+	content: '気圧';
+}
+
+.box_pressure {
+	background: url('img/pressure.svg') no-repeat;
+	background-size: contain;
+}
+
+.illuminance_over::before {
+	content: 'Illuminance';
+}
+
+.illuminance_over_jp::before {
+	content: '照度';
+}
+
+.box_illuminance {
+	background: url('img/illuminance.svg') no-repeat;
+	background-size: contain;
+}
+
+.uv_over::before {
+	content: 'UV Index';
+}
+
+.uv_over_jp::before {
+	content: 'UVインデックス';
+}
+
+.box_uv {
+	background: url('img/uv.svg') no-repeat;
+	background-size: contain;
+}
+
+.green {
+	background-color: rgba(37, 182, 170, 0.6);
+}
+
+.blue {
+	background-color: rgba(43, 79, 161, 0.6);
+}
+
+.amount {
+	margin-top: auto;
+	font-size: 240%;
+}
+
+p {
+	margin: 0;
+}
+
+div[lang="ja"], span[lang="ja"], p[lang="ja"], select[lang="ja"] {
+	display: none;
+}
+
+/* Flash */
+.flash {
+    animation-name: flash-animation;
+    animation-duration: 1.0s;
+}
+
+@keyframes flash-animation {
+    from { background: yellow; }
+    to   { background: default; }
+}
