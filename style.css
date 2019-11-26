@@ -75,40 +75,16 @@ input[type="checkbox"] + label {
     margin-left: .5rem;
 }
 
-input[type="radio"] {
-	display: none;
+#device-list {
+	max-width: 400px;
+	margin: 0 auto;
+	text-align: left;
 }
 
 input[type="radio"] + label {
 	display: inline-block;
 	cursor: pointer;
 	font-weight: normal;
-	position: relative;
-	padding-left: 1em;
-}
-
-input[type="radio"] + label::before {
-	content: '';
-	display: block;
-	border: 2px solid gray;
-	position: absolute;
-	top: 10%;
-	left: -0.5em;
-	width: 1em;
-	height: 1em;
-	border-radius: 50%;
-	transition: all 250ms ease;
-}
-
-input[type="radio"]:checked + label::after {
-	content: '';
-	position: absolute;
-	top: 0.45em;
-	left: -0.15em;
-	width: 0.6em;
-	height: 0.6em;
-	border-radius: 50%;
-	background-color: #33C3F0;
 }
 
 input[type="radio"]:checked + label{
