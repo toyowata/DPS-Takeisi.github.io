@@ -78,6 +78,7 @@ input[type="checkbox"] + label {
 #device-list {
 	max-width: 400px;
 	margin: 0 auto;
+	padding-left: 0.5em;
 	text-align: left;
 }
 
@@ -146,14 +147,13 @@ button.button_selected {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
-	max-width: 500px;
 	margin: 0 auto;
 }
 
 .infoBox {
 	position: relative;
 	margin: 5px;
-	width: 200px;
+	width: 45%;
 	height: 100px;
 	border-radius: 4px;
 	font-family: 'Open Sans';
