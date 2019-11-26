@@ -235,12 +235,16 @@
 
         function getValue(blockId, path, digit) {
 
+            connect = new MbedCloudSDK.ConnectApi.default(window.config);
+
         	document.getElementById(blockId).innerText = '-';
+
 
                      let deviceId = getSelectedDeviceId();
                      // Add subscription for the selected device.
                      connect.addResourceSubscription(deviceId, path, data => {      // Called every notification
-                    	 document.getElementById(blockId).innerText = data.toFixed(digit);
+                    	document.getElementById(blockId).innerText = data.toFixed(digit);
+                     	console.log(blockId + ': ' + data);
                      })
                      .then(asyncId => { // Called subscription succeed.
                         // console.log(asyncId);
@@ -260,6 +264,8 @@
          */
          function subscribeTemperature() {
 
+        	 console.log('切り替えました');
+
              const temperaturePath = "/3303/0/5700";
              const humidityPath = "/3304/0/5700";
              const pressurePath = "/3323/0/5700";
@@ -271,7 +277,10 @@
 
              // Clear existing subscription if exist.
 
-             connect.deleteSubscriptions()
+
+             let promiseKari =	connect.deleteSubscriptions();
+
+             promiseKari
              .then(getValue("temperature", temperaturePath, 1))
              .then(getValue("humidity", humidityPath, 1))
              .then(getValue("pressure", pressurePath, 1))
