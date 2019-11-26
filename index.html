@@ -39,7 +39,7 @@
 <body>
 	<div id="dps_logo"></div>
     <div style="float: right;">
-    	<button id="en">English</button><button id="jp">日本語</button>
+    	<button id="en" class="button_selected">English</button><button id="jp">日本語</button>
     </div>
     <div id="apikey-holder" style="clear: both;">
         <span lang="en">API Key</span><span lang="ja">APIキー</span>:
@@ -198,13 +198,13 @@
                 for(let i=0; i < devices.data.length; i++) {
                     let id = devices.data[i].id;
                     document.getElementById("device-list").innerHTML +=
-                        '<input type="radio" name="selected-device" value="' + id + '"'
-                        + ' id="button-subscribe-camera" onClick="subscribeTemperature()"> ' + id + "<br />\n";
+                    	'<input type="radio" name="selected-device" value="' + id + '"'
+                        + ' id="' + id + '" onClick="subscribeTemperature()"> ' + '<label for="' + id + '">' + id + "</label><br />\n";
                         /*+ (i == 0 ? " checked" : "" ) +'> ' + id + "<br />\n";*/
                     console.log(id);
                 }
                 // Enable the subscribe button
-                document.getElementById("button-subscribe-camera").disabled = false;
+                //document.getElementById("button-subscribe-camera").disabled = false;
             })
             .catch(error => {
                 console.log(error);
@@ -236,6 +236,8 @@
         //ここから自作
 
         function getValue(blockId, path, digit) {
+
+        	document.getElementById(blockId).innerText = '-';
 
                      let deviceId = getSelectedDeviceId();
                      // Add subscription for the selected device.
@@ -423,6 +425,8 @@
         	$('.uv_over').addClass('uv_over_jp');
         	$(':lang(en)').hide();
         	$(':lang(ja)').show();
+        	$('#en').removeClass('button_selected');
+        	$('#jp').addClass('button_selected');
         });
 
         $('#en').on('click', function() {
@@ -433,6 +437,8 @@
         	$('.uv_over').removeClass('uv_over_jp');
         	$(':lang(en)').show();
         	$(':lang(ja)').hide();
+        	$('#en').addClass('button_selected');
+        	$('#jp').removeClass('button_selected');
         });
 
     </script>
