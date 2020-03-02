@@ -105,53 +105,6 @@
 
     <hr />
 
-    <div>
-    	<div>
-	        <p lang="en" style="font-size: small; color: #888888;">
-	                To take a picture, click the CAPTURE button.<br />
-	                You can also take a picture by pushing UB0 button on GR-LYCHEE.
-	        </p>
-	        <p lang="ja" class="capture_description_jp" style="font-size: small; color: #888888;">
-	        		映像をキャプチャする際は「キャプチャ」ボタンをクリックしてください。<br />
-	        		GR-LYCHEEボードのUB0ボタンでもキャプチャできます。
-	        </p>
-        </div>
-        <p style="margin: 8pt 0pt 8pt 0pt;">
-            <input type="checkbox" id="checkbox-auto-capture" onClick="handleAutoCapture()"> <span lang="en">auto capture</span><span lang="ja">自動キャプチャ</span>
-                <select id="trigger-period" name="trigger period" lang="en">
-                    <option value="0">continuously</option>
-                    <option value="5" selected>wait 5 sec</option>
-                    <option value="10">wait 10 sec</option>
-                    <option value="20">wait 20 sec</option>
-                    <option value="30">wait 30 sec</option>
-                    <option value="60">wait 1 min</option>
-                    <option value="300">wait 5 min</option>
-                    <option value="600">wait 10 min</option>
-                    <option value="3600">wait 1 hour</option>
-                </select>
-
-                <select id="trigger-period" name="trigger period" lang="ja">
-                    <option value="0">常時</option>
-                    <option value="5" selected>5秒間隔</option>
-                    <option value="10">10秒間隔</option>
-                    <option value="20">20秒間隔</option>
-                    <option value="30">30秒間隔</option>
-                    <option value="60">1分間隔</option>
-                    <option value="300">5分間隔</option>
-                    <option value="600">10分間隔</option>
-                    <option value="3600">1時間間隔</option>
-                </select>
-        </p>
-        <p>
-            <button type="button" id="button-trigger-camera" onClick="triggerCamera()" disabled><span lang="en">Capture</span><span lang="ja">キャプチャ</span></button>
-        </p>
-        <div id="device-message-holder" style="margin: 8pt 0pt 8pt 0pt;">
-            <!-- message here. -->
-        </div>
-
-
-    </div>
-
     <div id="image-holder" style="margin: 8pt 0px 0px 8pt;">
         <!-- Received Photo Here. -->
     </div>
